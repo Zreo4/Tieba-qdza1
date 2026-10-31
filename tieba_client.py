@@ -14,19 +14,19 @@ TBS_URL = "https://tieba.baidu.com/dc/common/tbs"
 LIKE_URL = "https://c.tieba.baidu.com/c/f/forum/like"
 SIGN_URL = "https://c.tieba.baidu.com/c/c/forum/sign"
 
+# 2026年终极伪装：User-Agent 采用 Android 16 系统 + 2026年最新贴吧客户端 v22.13.1.1 
 HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/95.0.4638.69 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Linux; Android 16; SM-S948B Build/UP1A.251005.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.0.0 Mobile Safari/537.36 bdtb/22.13.1.1",
+    "Content-Type": "application/x-www-form-urlencoded",
     ),
 }
 
+# 设备请求体数据同步对齐 2026 最新客户端与海外版旗舰硬件特征
 BASE_SIGN_DATA = {
     "_client_type": "2",
-    "_client_version": "9.7.8.0",
-    "_phone_imei": "000000000000000",
-    "model": "MI+5",
+    "_client_version": "22.13.1.1",     # 彻底抛弃过时的 9.x 或 12.x，直接用 2026 最新版号
+    "_phone_imei": "351846209845127",   # 随机生成的国际版格式真机串号
+    "model": "SM-S948B",               # 三星 Galaxy S26 Ultra 国际版官方型号
     "net_type": "1",
 }
 
@@ -104,18 +104,21 @@ class TiebaClient:
         page_no = 1
 
         while True:
+            # 只有临时会话 ID 里的毫秒级时间戳和随机尾数是动态的，这符合真人打开 App 的特征
+            current_ms = str(int(time.time() * 1000))
+            random_suffix = str(random.randint(100, 999))
             data = {
                 "BDUSS": self.bduss,
                 "_client_type": "2",
-                "_client_id": "wappc_1534235498291_488",
-                "_client_version": "9.7.8.0",
-                "_phone_imei": "000000000000000",
-                "from": "1008621y",
+                "_client_id": f"wappc_{current_ms}_{random_suffix}",
+                "_client_version": "22.13.1.1",
+                "_phone_imei": "351846209845127",
+                "from": "1013444a", # 三星渠道
                 "page_no": str(page_no),
                 "page_size": "200",
-                "model": "MI+5",
+                "model": "SM-S948B", # 三星手机型号
                 "net_type": "1",
-                "timestamp": str(int(time.time())),
+                "timestamp": str(int(time.time())),# 每次请求的当下时间戳
                 "vcode_tag": "11",
             }
             data["sign"] = self.signature(data)
@@ -137,7 +140,7 @@ class TiebaClient:
                 break
 
             page_no += 1
-            time.sleep(random.uniform(1, 2))
+            time.sleep(random.uniform(1.5, 3))
 
         logger.info(f"共获取到 {len(forums)} 个关注的贴吧")
         return forums
