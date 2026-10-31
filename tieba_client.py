@@ -18,7 +18,6 @@ SIGN_URL = "https://c.tieba.baidu.com/c/c/forum/sign"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Linux; Android 16; SM-S948B Build/UP1A.251005.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/132.0.0.0 Mobile Safari/537.36 bdtb/22.13.1.1",
     "Content-Type": "application/x-www-form-urlencoded",
-},
 }
 
 # 设备请求体数据同步对齐 2026 最新客户端与海外版旗舰硬件特征
