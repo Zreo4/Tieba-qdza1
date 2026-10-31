@@ -1,4 +1,4 @@
-name: Daily Tieba Sign-In
+name: Tieba QD
 
 on:
   workflow_dispatch:
